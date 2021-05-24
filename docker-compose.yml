@@ -6,6 +6,8 @@ services:
     restart: always
     ports:
       - 5432:5432
+    volumes:
+      - database:/var/lib/postgresql/data
 
   minio:
       image: minio/minio:RELEASE.2020-08-13T02-39-50Z
@@ -15,9 +17,21 @@ services:
         MINIO_ACCESS_KEY: minio
         MINIO_SECRET_KEY: miniostorage
       command: server /data
+      restart: always
+      volumes:
+        - minio:/data
 
   rabbitmq:
       image: "rabbitmq:3-management"
+      restart: always
       ports:
         - 5672:5672
         - 15672:15672
+      hostname: rabbitmq
+      volumes:
+        - rabbitmq:/var/lib/rabbitmq
+
+volumes:
+    minio:
+    database:
+    rabbitmq:
